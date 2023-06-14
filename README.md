@@ -1,6 +1,23 @@
-# 🧰 Simple TypeScript Starter | 2023
+# DDD Playlist Manager POC
 
-> We talk about a lot of **advanced Node.js and TypeScript** concepts on [the blog](https://khalilstemmler.com), particularly focused around Domain-Driven Design and large-scale enterprise application patterns. However, I received a few emails from readers that were interested in seeing what a basic TypeScript starter project looks like. So I've put together just that.
+## My objectives with this POC
+
+- Explore alternatives on how to deal with huge collections of items following DDD patterns
+- Before, I'd only be able to solve this problem by leaking some business logic to the database repository
+- I want to see if I can incorporate the new knowledge from the software essentialist course into this problem
+
+## New information
+
+- **aggregate**: is everything that we can reasonably expect to change idempotently and atomically (all or nothing) in a single transaction.
+- **Aggregates are not a domain modelling tool. They're an Application, transactional consistency boundary tool.**
+- we can create an aggregate to our specific purpose of reordering the playlist. (eg. PlaylistReordering)
+- do not force a models into fitting the application level limitations -> design a better aggregate for it.
+- Entities = nouns.
+- aggregate = a cluster of entities, value objects that change at the same time
+
+## simple-typescript-starter info
+
+source: https://github.com/stemmlerjs/simple-typescript-starter
 
 ### Features
 
