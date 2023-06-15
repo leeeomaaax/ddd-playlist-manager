@@ -8,12 +8,7 @@ import { Name } from '../../../../../shared/domain/Name';
 import { Playlist } from '../../../domain/Playlist';
 import { DateClass } from '../../../../../shared/domain/DateClass';
 
-type PossibleErrors =
-  | Errors.OwnerNotFound
-  | Errors.InvalidOwnerId
-  | Errors.NameIsRequired
-  | Errors.DatabaseError
-  | Errors.InvalidOwnerType;
+type PossibleErrors = Errors.NameIsRequired | Errors.DatabaseError;
 
 type Response = Either<PossibleErrors, void>;
 
