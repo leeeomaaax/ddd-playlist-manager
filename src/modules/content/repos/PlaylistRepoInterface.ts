@@ -10,11 +10,11 @@ export interface PlaylistRepoInterface {
 
   getNextPosition(playlistId: UniqueEntityId): Promise<Result<number>>;
   saveItem(item: PlaylistItem): Promise<Result<void>>;
-  // listItems(
-  //   offset: number,
-  //   pageSize: number,
-  //   playlistId: UniqueEntityId,
-  // ): Promise<Result<PlaylistItem[]>>;
+  listItems(
+    offset: number,
+    pageSize: number,
+    playlistId: UniqueEntityId,
+  ): Promise<Result<PlaylistItem[]>>;
   // findItemById(itemId: UniqueEntityId): Promise<Result<PlaylistItem | null>>;
   // nextEpisodeId(
   //   playlistId: UniqueEntityId,

@@ -5,6 +5,7 @@ import { Logger } from './shared/core/Logger';
 import createPlaylist from './modules/content/useCases/Playlist/CreatePlaylist';
 import listPlaylists from './modules/content/useCases/Playlist/ListPlaylists';
 import addItemToPlaylist from './modules/content/useCases/Playlist/AddItemToPlaylist';
+import listPlaylistItems from './modules/content/useCases/Playlist/ListPlaylistItems';
 
 const log = new Logger('index');
 
@@ -27,6 +28,14 @@ app.put('/playlist/:playlistId/item/:episodeId', async (req, res) => {
   const result = await addItemToPlaylist.execute({
     playlistId: req.params.playlistId as string,
     episodeId: req.params.episodeId as string,
+  });
+  return res.json(result);
+});
+
+app.get('/playlist/:playlistId/items', async (req, res) => {
+  const result = await listPlaylistItems.execute({
+    playlistId: req.params.playlistId as string,
+    page: (req.query.page as string) || '0',
   });
   return res.json(result);
 });

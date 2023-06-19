@@ -196,4 +196,38 @@ export class PlaylistRepo implements PlaylistRepoInterface {
     //is nothing to be done, since it makes no sense to update an item
     return Result.ok();
   }
+
+  async listItems(
+    offset: number,
+    pageSize: number,
+    playlistId: UniqueEntityId,
+  ): Promise<Result<PlaylistItem[]>> {
+    try {
+      const model = playlistItemModel();
+      const docs = (await model
+        .find({ playlistId: playlistId.toPersistence() })
+        .sort({ position: 1 })
+        .skip(offset)
+        .limit(pageSize)
+        .toArray()) as PlaylistsItemsPersistenceSchema[];
+
+      const items = docs
+        .map((doc) => {
+          const itemOrError = PlaylistItemMap.toDomain(doc);
+          if (itemOrError.isFailure) {
+            console.warn(`Could not parse playlistItem: ${doc._id}`);
+            return null;
+          }
+
+          return itemOrError.getValue();
+        })
+        .filter((item) => item !== null) as PlaylistItem[];
+
+      return Result.ok<PlaylistItem[]>(items);
+    } catch (e) {
+      return Result.fail<PlaylistItem[]>(
+        'Could not read playlistItems from database',
+      );
+    }
+  }
 }
