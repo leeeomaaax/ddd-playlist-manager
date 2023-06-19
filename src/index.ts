@@ -6,6 +6,7 @@ import createPlaylist from './modules/content/useCases/Playlist/CreatePlaylist';
 import listPlaylists from './modules/content/useCases/Playlist/ListPlaylists';
 import addItemToPlaylist from './modules/content/useCases/Playlist/AddItemToPlaylist';
 import listPlaylistItems from './modules/content/useCases/Playlist/ListPlaylistItems';
+import changePlaylistItemPosition from './modules/content/useCases/Playlist/ChangePlaylistItemPosition';
 
 const log = new Logger('index');
 
@@ -24,10 +25,10 @@ app.get('/playlists', async (req, res) => {
   return res.json(result);
 });
 
-app.put('/playlist/:playlistId/item/:episodeId', async (req, res) => {
+app.put('/playlist/:playlistId/item', async (req, res) => {
   const result = await addItemToPlaylist.execute({
     playlistId: req.params.playlistId as string,
-    episodeId: req.params.episodeId as string,
+    episodeId: req.body.episodeId as string,
   });
   return res.json(result);
 });
@@ -39,6 +40,18 @@ app.get('/playlist/:playlistId/items', async (req, res) => {
   });
   return res.json(result);
 });
+
+app.put(
+  '/playlist/:playlistId/item/:itemId/changePosition',
+  async (req, res) => {
+    const result = await changePlaylistItemPosition.execute({
+      playlistId: req.params.playlistId as string,
+      itemId: req.params.itemId as string,
+      position: req.body.position as number,
+    });
+    return res.json(result);
+  },
+);
 
 async function main(): Promise<void> {
   log.info(`Launched from ${process.cwd()}`);

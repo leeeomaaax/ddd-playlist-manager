@@ -8,11 +8,26 @@ export class InvalidPlaylistId extends Result<UseCaseError> {
     } as UseCaseError);
   }
 }
+export class PlaylistNotFound extends Result<UseCaseError> {
+  constructor() {
+    super(false, {
+      message: 'Playlist not found',
+    } as UseCaseError);
+  }
+}
 
 export class InvalidPlaylistItemId extends Result<UseCaseError> {
   constructor() {
     super(false, {
       message: 'Invalid playlist item id',
+    } as UseCaseError);
+  }
+}
+
+export class PlaylistItemNotFound extends Result<UseCaseError> {
+  constructor() {
+    super(false, {
+      message: 'Playlist item not found',
     } as UseCaseError);
   }
 }
@@ -29,6 +44,14 @@ export class DatabaseError extends Result<UseCaseError> {
   constructor(msg: string) {
     super(false, {
       message: `Database error: ${msg}`,
+    } as UseCaseError);
+  }
+}
+
+export class ReorderValidationError extends Result<UseCaseError> {
+  constructor(msg: string) {
+    super(false, {
+      message: `ReorderValidationError: ${msg}`,
     } as UseCaseError);
   }
 }

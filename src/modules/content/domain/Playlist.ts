@@ -33,8 +33,8 @@ export class Playlist extends Entity<PlaylistProps> {
     return this.props.isActive;
   }
 
-  get dynamic(): boolean | undefined {
-    return this.props.dynamic;
+  get dynamic(): boolean {
+    return !!this.props.dynamic;
   }
 
   constructor(props: PlaylistProps, id?: UniqueEntityId) {

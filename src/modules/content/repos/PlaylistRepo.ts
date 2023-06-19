@@ -8,6 +8,7 @@ import playlistModel, {
 import { PlaylistMap } from '../mappers/PlaylistMap';
 
 import { PlaylistItem } from '../domain/PlaylistItem';
+import { ReorderPlaylistItem } from '../domain/ReorderPlaylistItem';
 import { PlaylistItemMap } from '../mappers/PlaylistItemMap';
 import playlistItemModel, {
   PlaylistsItemsPersistenceSchema,
@@ -94,6 +95,19 @@ export class PlaylistRepo implements PlaylistRepoInterface {
       return Result.fail<Playlist>(
         'Could not find playlist by id from database',
       );
+    }
+  }
+
+  async getPlaylistSizeById(listId: UniqueEntityId): Promise<Result<number>> {
+    try {
+      const model = playlistItemModel();
+      const count = await model.countDocuments({
+        playlistId: listId.toPersistence(),
+      });
+
+      return Result.ok<number>(count);
+    } catch (e) {
+      return Result.fail<number>('Could not count playlist size');
     }
   }
 
@@ -227,6 +241,48 @@ export class PlaylistRepo implements PlaylistRepoInterface {
     } catch (e) {
       return Result.fail<PlaylistItem[]>(
         'Could not read playlistItems from database',
+      );
+    }
+  }
+
+  async saveReorderPlaylistItemAggregate(
+    reorderPlaylistItem: ReorderPlaylistItem,
+  ): Promise<Result<void>> {
+    try {
+      const shiftDirection =
+        reorderPlaylistItem.oldPosition > reorderPlaylistItem.newPosition
+          ? +1
+          : -1;
+
+      const model = playlistItemModel();
+
+      await model.updateMany(
+        {
+          _id: { $ne: reorderPlaylistItem.itemId.toPersistence() },
+          playlistId: reorderPlaylistItem.playlistId.toPersistence(),
+          position: {
+            $gte: Math.min(
+              reorderPlaylistItem.newPosition,
+              reorderPlaylistItem.oldPosition,
+            ),
+            $lte: Math.max(
+              reorderPlaylistItem.newPosition,
+              reorderPlaylistItem.oldPosition,
+            ),
+          },
+        },
+        { $inc: { position: shiftDirection } },
+      );
+
+      await model.updateOne(
+        { _id: reorderPlaylistItem.itemId.toPersistence() },
+        { $set: { position: reorderPlaylistItem.newPosition } },
+      );
+
+      return Result.ok();
+    } catch (e: any) {
+      return Result.fail<void>(
+        `Could not reorder playlist items: ${e.message}`,
       );
     }
   }
