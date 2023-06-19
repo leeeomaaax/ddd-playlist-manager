@@ -3,14 +3,20 @@ import { Database } from './shared/infra/database';
 import { Logger } from './shared/core/Logger';
 
 import createPlaylist from './modules/content/useCases/Playlist/CreatePlaylist';
+import listPlaylists from './modules/content/useCases/Playlist/ListPlaylists';
 
 const log = new Logger('index');
 
 const app = express();
 app.use(express.json());
 
-app.post('/createPlaylist', async (req, res) => {
+app.post('/playlist', async (req, res) => {
   const result = await createPlaylist.execute({ name: 'test' });
+  return res.json(result);
+});
+
+app.get('/playlists', async (req, res) => {
+  const result = await listPlaylists.execute({ page: '0' });
   return res.json(result);
 });
 
