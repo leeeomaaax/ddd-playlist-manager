@@ -6,7 +6,7 @@
 - Before, I'd only be able to solve this problem by leaking some business logic to the database repository
 - I want to see if I can incorporate the new knowledge from the software essentialist course into this problem
 
-# Out of scope:
+### Out of scope:
 
 - production ready communication layer (http). Express was only added as a way to interact with my useCases
 
