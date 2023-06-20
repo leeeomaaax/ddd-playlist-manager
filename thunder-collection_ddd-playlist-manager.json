@@ -1,0 +1,101 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "ddd-playlist-manager",
+    "dateExported": "2023-06-20T13:36:02.471Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "4ec6ed79-627d-4624-90af-5df9ab151500",
+            "colId": "d78a6dcd-50fe-4213-b560-4bef77388941",
+            "containerId": "",
+            "name": "createPlaylist",
+            "url": "localhost:3000/playlist",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2023-06-15T14:04:32.029Z",
+            "modified": "2023-06-20T13:34:01.382Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Leo1\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "2b7a7bea-b329-4511-9de6-3c7f50c315df",
+            "colId": "d78a6dcd-50fe-4213-b560-4bef77388941",
+            "containerId": "",
+            "name": "listPlaylists",
+            "url": "localhost:3000/playlists?page=0",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-06-19T17:41:26.443Z",
+            "modified": "2023-06-19T18:18:29.211Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "page",
+                    "value": "0",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "ae7d5dd9-7e47-4b92-ade4-4c7c0e0c2d07",
+            "colId": "d78a6dcd-50fe-4213-b560-4bef77388941",
+            "containerId": "",
+            "name": "addItemToPlaylist",
+            "url": "localhost:3000/playlist/64909bdc2fc9fdf5f41c2bf8/item",
+            "method": "PUT",
+            "sortNum": 30000,
+            "created": "2023-06-19T18:18:37.037Z",
+            "modified": "2023-06-20T13:35:27.773Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"episodeId\": \"64909bdc2fc9fdf5f4100005\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "ac3cc5e8-4341-4a0d-9b2e-f97f99514040",
+            "colId": "d78a6dcd-50fe-4213-b560-4bef77388941",
+            "containerId": "",
+            "name": "listPlaylistItems",
+            "url": "localhost:3000/playlist/64909bdc2fc9fdf5f41c2bf8/items",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2023-06-19T18:35:16.364Z",
+            "modified": "2023-06-19T18:35:39.055Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "50ffe957-9f4b-42c7-b116-6fc1d325bce7",
+            "colId": "d78a6dcd-50fe-4213-b560-4bef77388941",
+            "containerId": "",
+            "name": "changePlaylistItemPosition",
+            "url": "localhost:3000/playlist/64909bdc2fc9fdf5f41c2bf8/item/64909d26714197131f354ca9/changePosition",
+            "method": "PUT",
+            "sortNum": 50000,
+            "created": "2023-06-19T22:29:20.195Z",
+            "modified": "2023-06-20T13:35:51.505Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"position\": 4\n}",
+                "form": []
+            },
+            "tests": []
+        }
+    ],
+    "settings": {}
+}

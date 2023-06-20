@@ -33,6 +33,21 @@ source: https://github.com/stemmlerjs/simple-typescript-starter
 - VS Code debugger scripts
 - Local development with Nodemon
 
+### Database
+
+mongo@4.2.17 running a single node replicaSet
+
+`$ mongod --config /usr/local/etc/mongod.conf --replSet=rs0`
+
+in another terminal
+
+`$ mongo`
+`rs.initiate()`
+
+### Thunder client
+
+https://www.thunderclient.com/ collection at `./thunder-collection_ddd-playlist-manager.json`
+
 ### Scripts
 
 #### `npm run start:dev`
