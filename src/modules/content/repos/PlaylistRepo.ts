@@ -111,37 +111,13 @@ export class PlaylistRepo implements PlaylistRepoInterface {
     }
   }
 
-  private async maxPlaylistPosition(
-    playlistId: UniqueEntityId,
-  ): Promise<Result<number | null>> {
-    try {
-      const model = playlistItemModel();
-      const docs = await model
-        .find(
-          { playlistId: playlistId.toPersistence() },
-          { projection: { position: 1, _id: -1 } },
-        )
-        .sort({ position: -1 })
-        .limit(1)
-        .toArray();
-
-      if (!docs.length) return Result.ok<null>(null);
-      return Result.ok<number>(docs[0].position);
-    } catch (e) {
-      return Result.fail<number>(
-        `Could not read last position from list ${playlistId}`,
-      );
-    }
-  }
-
   async getNextPosition(playlistId: UniqueEntityId): Promise<Result<number>> {
-    const maxPositionOrError = await this.maxPlaylistPosition(playlistId);
-    if (maxPositionOrError.isFailure) {
-      return maxPositionOrError as Result<number>;
+    const playlistSizeOrError = await this.getPlaylistSizeById(playlistId);
+    if (playlistSizeOrError.isFailure) {
+      return Result.fail<number>(playlistSizeOrError.error as string);
     }
-    const maxPosition = maxPositionOrError.getValue();
-    if (maxPosition === null) return Result.ok<number>(0);
-    return Result.ok<number>(maxPosition + 1);
+    const nextPosition = playlistSizeOrError.getValue();
+    return Result.ok<number>(nextPosition);
   }
 
   async findItemById(
