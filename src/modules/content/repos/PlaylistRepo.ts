@@ -5,6 +5,7 @@ import { Result } from '../../../shared/core/Result';
 import playlistModel, {
   PlaylistsPersistenceSchema,
 } from '../../../shared/infra/database/models/playlists';
+import { Database } from '../../../shared/infra/database/index';
 import { PlaylistMap } from '../mappers/PlaylistMap';
 
 import { PlaylistItem } from '../domain/PlaylistItem';
@@ -232,28 +233,40 @@ export class PlaylistRepo implements PlaylistRepoInterface {
 
       const model = playlistItemModel();
 
-      await model.updateMany(
-        {
-          _id: { $ne: reorderPlaylistItem.itemId.toPersistence() },
-          playlistId: reorderPlaylistItem.playlistId.toPersistence(),
-          position: {
-            $gte: Math.min(
-              reorderPlaylistItem.newPosition,
-              reorderPlaylistItem.oldPosition,
-            ),
-            $lte: Math.max(
-              reorderPlaylistItem.newPosition,
-              reorderPlaylistItem.oldPosition,
-            ),
-          },
-        },
-        { $inc: { position: shiftDirection } },
-      );
+      const mongoClient = Database.getDatabase().mongoClient;
+      if (!mongoClient) return Result.fail('Could not get mongo client');
 
-      await model.updateOne(
-        { _id: reorderPlaylistItem.itemId.toPersistence() },
-        { $set: { position: reorderPlaylistItem.newPosition } },
-      );
+      const session = mongoClient.startSession();
+      try {
+        await session.withTransaction(async () => {
+          await model.updateMany(
+            {
+              _id: { $ne: reorderPlaylistItem.itemId.toPersistence() },
+              playlistId: reorderPlaylistItem.playlistId.toPersistence(),
+              position: {
+                $gte: Math.min(
+                  reorderPlaylistItem.newPosition,
+                  reorderPlaylistItem.oldPosition,
+                ),
+                $lte: Math.max(
+                  reorderPlaylistItem.newPosition,
+                  reorderPlaylistItem.oldPosition,
+                ),
+              },
+            },
+            { $inc: { position: shiftDirection } },
+            { session },
+          );
+
+          await model.updateOne(
+            { _id: reorderPlaylistItem.itemId.toPersistence() },
+            { $set: { position: reorderPlaylistItem.newPosition } },
+            { session },
+          );
+        });
+      } finally {
+        await session.endSession();
+      }
 
       return Result.ok();
     } catch (e: any) {
